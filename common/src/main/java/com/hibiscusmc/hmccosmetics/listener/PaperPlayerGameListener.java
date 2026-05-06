@@ -2,9 +2,11 @@ package com.hibiscusmc.hmccosmetics.listener;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
+import com.hibiscusmc.hmccosmetics.api.events.PlayerRespawnCosmeticEvent;
 import com.hibiscusmc.hmccosmetics.cosmetic.CosmeticSlot;
 import com.hibiscusmc.hmccosmetics.user.CosmeticUser;
 import com.hibiscusmc.hmccosmetics.user.CosmeticUsers;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,7 +26,10 @@ public class PaperPlayerGameListener implements Listener {
         CosmeticUser user = CosmeticUsers.getUser(event.getPlayer());
         if (user == null) return;
         if (user.isInWardrobe()) return;
-        if (user.hasCosmeticInSlot(CosmeticSlot.BACKPACK)) user.respawnBackpack();
+        if (user.hasCosmeticInSlot(CosmeticSlot.BACKPACK)) {
+            user.respawnBackpack();
+            Bukkit.getServer().getPluginManager().callEvent(new PlayerRespawnCosmeticEvent(event.getPlayer()));
+        }
     }
 
     private CosmeticSlot slotTypeToCosmeticType(PlayerArmorChangeEvent.SlotType slotType) {

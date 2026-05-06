@@ -20,3 +20,9 @@
         <img alt="discord" src="https://img.shields.io/badge/Discord Support-blue?style=for-the-badge"/>
     </a>
 </p> 
+
+<h2>Patches</h2>
+This is a fork of the <a href="https://github.com/HibiscusMC/HMCCosmetics">original repo</a> with extra API features:
+<ul>
+    <li>Implemented PlayerRespawnCosmeticEvent</li>
+</ul>

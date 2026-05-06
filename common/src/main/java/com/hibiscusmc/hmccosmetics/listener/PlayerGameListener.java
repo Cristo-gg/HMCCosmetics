@@ -2,6 +2,7 @@ package com.hibiscusmc.hmccosmetics.listener;
 
 import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.api.events.PlayerCosmeticPostEquipEvent;
+import com.hibiscusmc.hmccosmetics.api.events.PlayerRespawnCosmeticEvent;
 import com.hibiscusmc.hmccosmetics.config.Settings;
 import com.hibiscusmc.hmccosmetics.config.WardrobeSettings;
 import com.hibiscusmc.hmccosmetics.cosmetic.CosmeticSlot;
@@ -105,6 +106,8 @@ public class PlayerGameListener implements Listener {
             user.respawnBackpack();
             user.respawnBalloon();
             user.updateCosmetic();
+
+            Bukkit.getServer().getPluginManager().callEvent(new PlayerRespawnCosmeticEvent(event.getPlayer()));
         }, 4);
 
         if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)) return;
@@ -132,6 +135,8 @@ public class PlayerGameListener implements Listener {
             Bukkit.getScheduler().runTaskLater(HMCCosmeticsPlugin.getInstance(), () -> {
                 user.spawnBalloon((CosmeticBalloonType) user.getCosmetic(CosmeticSlot.BALLOON));
                 user.updateCosmetic();
+
+                Bukkit.getServer().getPluginManager().callEvent(new PlayerRespawnCosmeticEvent(event.getPlayer()));
             }, 4);
         }
     }
@@ -170,6 +175,7 @@ public class PlayerGameListener implements Listener {
             if (currentItem.containsEnchantment(Enchantment.RIPTIDE)) return;
             if (!user.isBackpackSpawned()) {
                 user.spawnBackpack((CosmeticBackpackType) user.getCosmetic(CosmeticSlot.BACKPACK));
+                Bukkit.getServer().getPluginManager().callEvent(new PlayerRespawnCosmeticEvent(player));
             }
             return;
         }
@@ -332,7 +338,11 @@ public class PlayerGameListener implements Listener {
             CosmeticUser user = CosmeticUsers.getUser(player);
             if (user == null) return;
 
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(HMCCosmeticsPlugin.getInstance(), user::respawnBackpack, 1);
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(HMCCosmeticsPlugin.getInstance(), () -> {
+                user.respawnBackpack();
+
+                Bukkit.getServer().getPluginManager().callEvent(new PlayerRespawnCosmeticEvent(player));
+            }, 1);
 		}
 	}
 
@@ -342,7 +352,11 @@ public class PlayerGameListener implements Listener {
             CosmeticUser user = CosmeticUsers.getUser(player);
             if (user == null) return;
 
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(HMCCosmeticsPlugin.getInstance(), user::respawnBackpack, 1);
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(HMCCosmeticsPlugin.getInstance(), () -> {
+                user.respawnBackpack();
+
+                Bukkit.getServer().getPluginManager().callEvent(new PlayerRespawnCosmeticEvent(player));
+            }, 1);
 		}
 	}
 
